@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 Multi-Chart Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <h2>D3 Multi-Chart Dashboard</h2>
+
+  <div class="responsive-svg-container">
+    <div id="bar-chart"></div>
+    <div id="line-chart"></div>
+    <div id="scatter-chart"></div>
+    <div id="donut-chart"></div>
+  </div>
+
+  <!-- D3 Library -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <!-- Shared setup -->
+  <script src="js/shared_constant.js"></script>
+  <script src="js/scales.js"></script>
+  <script src="js/legend.js"></script>
+
+  <!-- Individual charts -->
+  <script src="js/bars.js"></script>
+  <script src="js/line.js"></script>
+  <script src="js/donut.js"></script>
+  <script src="js/scatter.js"></script>
+
+  <!-- Load data last -->
+  <script src="js/load_data.js"></script>
+</body>
+</html>
+
+
+        
+
+
+
+
