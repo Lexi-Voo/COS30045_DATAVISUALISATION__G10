@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drug Testing Trends in Australia</title>
+  
+  <!-- CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/visualisations.css">
+
+  <!-- D3.js -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+  <!-- NAVBAR INCLUDE -->
+  <div id="navbar"></div>
+
+  <div class="container mt-4">
+
+    <!-- INTRO -->
+    <div class="mb-4">
+      <h3>Understanding Drug Testing Trends in Australia</h3>
+      <p>
+        Roadside drug testing plays a critical role in maintaining road safety across Australia. 
+        From 2008 to 2024, national enforcement data compiled by the 
+        <strong>Bureau of Infrastructure and Transport Research Economics (BITRE)</strong> 
+        shows a steady increase in both the number of tests conducted and the rate of positive detections. 
+        In 2024 alone, over 500,000 roadside drug tests were administered, with a positive detection rate of 10.5%, 
+        highlighting an ongoing public safety concern linked to drug-impaired driving.
+      </p>
+      <p>
+        This dashboard provides an interactive overview of these national trends, 
+        allowing policymakers, transport safety analysts, and the general public to explore how drug testing outcomes 
+        vary across jurisdictions, demographics, and years. 
+        Users can examine the total number of tests, compare positive detection rates, and 
+        observe how enforcement efforts have evolved over time under Australia’s <em>Safe System</em> approach.
+      </p>
+    </div>
+
+    <!-- STATS CARDS -->
+    <div class="row mb-5">
+      <div class="col-md-4">
+        <div class="stats-card stats-consistent">
+          <h6>Total Tests in 2024</h6>
+          <h3 id="totalTests">0</h3>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stats-card stats-consistent">
+          <h6>Highest Positive Detections</h6>
+          <h3 id="positiveRate">0%</h3>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stats-card stats-consistent">
+          <h6>Year with Highest Positives Count</h6>
+          <h3 id="highestYear">0</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- NATIONAL TRENDS CHART -->
+    <section class="mb-5">
+      <h4 class="mb-3">National Trends (2008–2024)</h4>
+      <div id="chart" class="responsive-svg-container"></div>
+    </section>
+
+    <!-- JURISDICTION DUMBELL CHART -->
+    <section class="chart-container mb-5">
+      <h4>Change in Positivity Rate Over Time by Jurisdiction</h4>
+      <p>
+        This chart compares how each state or territory’s <strong>positivity rate</strong> (percentage of positive drug tests)
+        has changed between two selected years. It complements the national trend chart above by focusing on 
+        <em>comparative change per jurisdiction</em>.
+      </p>
+
+      <!-- Dropdowns -->
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <label for="yearStart" class="form-label mb-0">Start Year:</label>
+        <select id="yearStart" class="form-select form-select-sm" style="width: 120px;"></select>
+
+        <label for="yearEnd" class="form-label mb-0">End Year:</label>
+        <select id="yearEnd" class="form-select form-select-sm" style="width: 120px;"></select>
+
+        <button id="updateChart" class="btn btn-primary btn-sm">Update Chart</button>
+      </div>
+
+      <div id="dumbbell-chart" class="responsive-svg-container"></div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER INCLUDE -->
+  <div id="footer"></div>
+
+  <!-- JS DEPENDENCIES -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- PROJECT SCRIPTS -->
+<script src="js/shared_constant.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/chart2.js"></script>
+<script src="js/interaction.js"></script>  <!-- MUST be before load_data -->
+<script src="js/load_data.js"></script>
+
+
+  
+
+  <!-- NAVBAR/FOOTER LOADER -->
+  <script>
+    function loadHTML(id, file) {
+      fetch(file)
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById(id).innerHTML = data;
+          const currentPage = window.location.pathname.split("/").pop();
+          const navLinks = document.querySelectorAll(".nav-link");
+          navLinks.forEach(link => {
+            const linkPage = link.getAttribute("href");
+            if (linkPage === currentPage) link.classList.add("active");
+            else link.classList.remove("active");
+          });
+        })
+        .catch(err => console.error(`Error loading ${file}:`, err));
+    }
+
+    loadHTML('navbar', 'components/navbar.html');
+    loadHTML('footer', 'components/footer.html');
+    </script>
+
+</body>
+</html>

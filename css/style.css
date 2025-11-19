@@ -1,0 +1,77 @@
+.responsive-svg-container{
+    margin: 0px auto;
+    padding: 10px;
+    width: 80%;
+    background-color: #ffffff;
+}
+
+#stackedbarchart{
+    max-width: 700px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#choroplethmap{
+    max-width: 900px;
+}
+
+.responsive-svg-container svg{
+    width: 100%;
+    height: auto;
+}
+
+#mapLayout{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-size: 15px;
+}
+
+#sidebar{
+    width: 20%; 
+    min-width: 150px;
+    max-width: 200px;
+    height: auto;
+    background: #00085f;
+    border-radius: 8px;
+    padding: 15px;
+    color: #ffffff;
+}
+
+#dropdown-container select{
+    padding: 5px;
+    margin: 30px;
+    border-radius: 5px;
+    width: 70%;
+}
+
+#infoBox p{
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+@media (max-width: 700px) {
+    #sidebar {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    #dropdown-container select {
+        width: 80%;
+        margin: 15px;
+        font-size: 12px;
+    }
+
+    #infoBox p {
+        padding-top: 15px;
+    }
+}
+
+#jurisdictionName {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
