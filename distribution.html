@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drug Detection Analysis Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <div class="container">
+        <header>
+            <h1>Drug Test Overview</h1>
+        </header>
+
+        <nav class="navigation">
+            <button class="nav-btn active" data-view="drugs">Drug Types Analysis</button>
+            <button class="nav-btn" data-view="age">Age Demographics Analysis</button>
+        </nav>
+
+        <main id="main-content">
+        </main>
+    </div>
+
+    <div id="footer"></div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="js/shared_constant.js"></script>
+    <script src="js/RQ2_chart.js"></script>
+    <script src="js/RQ3_chart.js"></script>
+    <script src="js/RQ4_chart.js"></script>
+    <script src="js/stackedbarchart.js"></script>
+    
+    <script src="js/interaction.js"></script>
+    <script src="js/load_data.js"></script>
+    <script src="js/load_components.js"></script>
+</body>
+</html>

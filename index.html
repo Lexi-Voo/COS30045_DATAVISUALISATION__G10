@@ -2,42 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>D3 Multi-Chart Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drug Testing Trends in Australia</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-  <h2>D3 Multi-Chart Dashboard</h2>
+  <div id="navbar"></div>
 
-  <div class="responsive-svg-container">
-    <div id="bar-chart"></div>
-    <div id="line-chart"></div>
-    <div id="scatter-chart"></div>
-    <div id="donut-chart"></div>
+  <div class="container mt-4">
+    <div class="mb-4">
+      <h3>Understanding Drug Testing Trends in Australia</h3>
+      <p>
+        Roadside drug testing plays a critical role in maintaining road safety across Australia. 
+        From 2008 to 2024, national enforcement data compiled by the 
+        <strong>Bureau of Infrastructure and Transport Research Economics (BITRE)</strong> 
+        shows a steady increase in both the number of tests conducted and the rate of positive detections. 
+        In 2024 alone, over 500,000 roadside drug tests were administered, with a positive detection rate of 10.5%, 
+        highlighting an ongoing public safety concern linked to drug-impaired driving.
+      </p>
+      <p>
+        This dashboard provides an interactive overview of these national trends, 
+        allowing policymakers, transport safety analysts, and the general public to explore how drug testing outcomes 
+        vary across jurisdictions, demographics, and years. 
+        Users can examine the total number of tests, compare positive detection rates, and 
+        observe how enforcement efforts have evolved over time under Australia’s <em>Safe System</em> approach.
+      </p>
+    </div>
+
+    <div class="row mb-5">
+  <div class="col-md-4">
+    <div class="stat-card">
+      <h6>Total Tests in 2024</h6>
+      <h3 id="totalTests">0</h3>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <h6>Highest Positive Detections</h6>
+      <h3 id="positiveRate">0%</h3>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <h6>Year with Highest Positives Count</h6>
+      <h3 id="highestYear">0</h3>
+    </div>
+  </div>
+</div>
+
+
+    <section class="mb-5">
+      <div id="chart" class="responsive-svg-container"></div>
+    </section>
+
+    <section class="chart-container mb-2">
+      <div class="d-flex align-items-center justify-content-between mb-1">
+        <h4 class="chart-title mb-0">Change in Positivity Rate Over Time by Jurisdiction</h4>
+        <div class="filter-bar d-flex align-items-center gap-3 p-3 rounded shadow-sm mb-3">
+          <label for="yearStart" class="form-label mb-0 fw-bold">Start Year:</label>
+          <select id="yearStart" class="form-select form-select-sm" style="width: 120px;"></select>
+
+          <label for="yearEnd" class="form-label mb-0 fw-bold">End Year:</label>
+          <select id="yearEnd" class="form-select form-select-sm" style="width: 120px;"></select>
+
+          <button id="updateChart" class="btn btn-primary btn-sm">Update Chart</button>
+      </div>
+      </div>
+      <div id="dumbbell-chart"></div>
+    </section>
   </div>
 
-  <!-- D3 Library -->
+  <div id="footer"></div>
+
   <script src="https://d3js.org/d3.v7.min.js"></script>
-
-  <!-- Shared setup -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/shared_constant.js"></script>
-  <script src="js/scales.js"></script>
-  <script src="js/legend.js"></script>
-
-  <!-- Individual charts -->
-  <script src="js/bars.js"></script>
-  <script src="js/line.js"></script>
-  <script src="js/donut.js"></script>
-  <script src="js/scatter.js"></script>
-
-  <!-- Load data last -->
+  <script src="js/RQ1_chart.js"></script>
+  <script src="js/RQ1+_chart.js"></script>
+  <script src="js/interaction.js"></script>
   <script src="js/load_data.js"></script>
+  <script src="js/load_components.js"></script>
+
 </body>
 </html>
-
-
-        
-
-
-
-

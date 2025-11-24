@@ -1,39 +1,51 @@
-// shared_constant.js
-const WIDTH = 900;
-const HEIGHT = 500;
-const MARGIN = { top: 50, right: 60, bottom: 70, left: 60 };
-const INNER_WIDTH = WIDTH - MARGIN.left - MARGIN.right;
-const INNER_HEIGHT = HEIGHT - MARGIN.top - MARGIN.bottom;
-
-// Colors
-const COLOR_BAR = "skyblue";
-const COLOR_LINE = "red";
-const COLOR_DUMBBELL_START = "#1f77b4";
-const COLOR_DUMBBELL_END = "#ff7f0e";
-const COLOR_LINE_CONNECT = "#999";
-
-// Tooltip settings
-const TOOLTIP_WIDTH = 100;
-const TOOLTIP_HEIGHT = 40;
-
-
-
-
-// --- Chart dimensions and margins ---
-const margin = { top: 80, right: 30, bottom: 100, left: 80 };
-const width = 800;
-const height = 500;
+// Chart dimensions and margins
+const width = 1100;   
+const height = 700;
+const margin = { top: 100, right: 80, bottom: 120, left: 140 };
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
 
-// --- Colors and style ---
+// Colors
+const colorBar = "skyblue";
+const colorLine = "red";
+const colorDumbbellStart = "#1f77b4";
+const colorDumbbellEnd = "#ff7f0e";
+const colorLineConnect = "#999";
+
+// Tooltip settings
+const tooltipBg = "#222";
+const tooltipTextColor = "#fff";
+const tooltipWidth = 100;
+const tooltipHeight = 40;
+
+
+// // --- Colors and style ---
 const colorScale = d3.scaleOrdinal();
 const drugColorScheme = d3.schemeSet2;
-const bodyBackgroundColor = "#ffffffff";  // light cream background
-const tooltipBg = "rgba(255, 255, 255, 0.95)";
+const bodyBackgroundColor = "#ffffffff"; 
 const tooltipBorder = "#ccc";
-const tooltipTextColor = "#333";
 
-// --- Tooltip dimensions ---
-const tooltipWidth = 80;
-const tooltipHeight = 35;
+
+
+const CONFIG = {
+    animationDuration: 800,
+    animationDelay: 100
+};
+
+const COLOR_SCHEMES = {
+    drugs:d3.schemeSet2,
+    age: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#43e97b', '#feca57', '#ff6b6b'],
+    default: ['#667eea', '#764ba2', '#f093fb', '#f5576c']
+};
+
+const DATA_PATHS = {
+    drugData: 'data/RQ2.csv',
+    ageData: 'data/RQ3.csv'
+};
+
+// Global data storage
+let globalData = {
+    drugs: null,
+    age: null
+};
+

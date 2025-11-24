@@ -1,23 +1,44 @@
-// ---------------------------
-// Tooltip Div
-// ---------------------------
-const tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("position", "absolute")
-    .style("pointer-events", "none")
-    .style("background", "#222")
-    .style("color", "#fff")
-    .style("border-radius", "4px")
-    .style("opacity", 0)
-    .style("padding", "10px 14px")
-    .style("font-size", "14px")
-    .style("line-height", "1.4")
-    .style("max-width", "220px");
+// Create a tooltip container
+function createTooltip() {
+    let tooltip = d3.select("body").select(".tooltip");
+    if (tooltip.empty()) {
+        tooltip = d3.select("body")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("position", "absolute")
+            .style("background", tooltipBg)
+            .style("color", tooltipTextColor)
+            .style("border-radius", "4px")
+            .style("padding", "10px 14px")
+            .style("font-size", "14px")
+            .style("line-height", "1.4")
+            .style("pointer-events", "none")
+            .style("opacity", 0)
+            .style("max-width", "220px");
+    }
+    return tooltip;
+}
 
-// ---------------------------
-// Attach Tooltip to Any Selection
-// ---------------------------
+function showTooltip(tooltip, html, event) {
+    tooltip
+        .html(html)
+        .style("left", `${event.pageX + 12}px`)
+        .style("top", `${event.pageY - 35}px`)
+        .transition()
+        .duration(200)
+        .style("opacity", 1);
+}
+
+function hideTooltip(tooltip) {
+    tooltip
+        .transition()
+        .duration(200)
+        .style("opacity", 0);
+}
+
+// Attach tooltip to any selection
 function attachTooltip(selection) {
+    const tooltip = createTooltip();
     selection.on("mouseenter", (event, d) => {
         let el = d3.select(event.currentTarget);
         let htmlContent = "";
@@ -28,7 +49,6 @@ function attachTooltip(selection) {
             const rate = el.attr("data-rate") || d.percent_positive;
             htmlContent = `Count: ${count}<br>Rate: ${rate}%`;
         }
-
         // Chart2: start, end, or line connect
         else if (el.classed("start") || el.classed("end") || el.classed("connect")) {
             const startVal = el.attr("data-start") || el.attr("data-value")?.split(" → ")[0];
@@ -36,26 +56,21 @@ function attachTooltip(selection) {
             htmlContent = `Start: ${startVal}<br>End: ${endVal}`;
         }
 
-        tooltip.transition().duration(200).style("opacity", 1);
-        tooltip.html(htmlContent);
+        showTooltip(tooltip, htmlContent, event);
     })
-    .on("mousemove", event => {
-        tooltip.style("left", (event.pageX + 12) + "px")
-               .style("top", (event.pageY - 35) + "px");
+    .on("mousemove", (event) => {
+        tooltip.style("left", `${event.pageX + 12}px`)
+               .style("top", `${event.pageY - 35}px`);
     })
-    .on("mouseleave", () => {
-        tooltip.transition().duration(200).style("opacity", 0);
-    });
+    .on("mouseleave", () => hideTooltip(tooltip));
 }
 
-// ---------------------------
-// Dumbbell Chart Filter + Tooltip
-// ---------------------------
+// Dumbbell chart dropdown interactivity
 function initChart2Interaction(data) {
     const yearStartSelect = d3.select("#yearStart");
     const yearEndSelect = d3.select("#yearEnd");
-
     const years = Array.from({ length: 2024 - 2008 + 1 }, (_, i) => (2008 + i).toString());
+
     years.forEach(y => {
         yearStartSelect.append("option").attr("value", y).text(y);
         yearEndSelect.append("option").attr("value", y).text(y);
@@ -70,57 +85,258 @@ function initChart2Interaction(data) {
 
         createDumbbellChart(data, start, end);
 
-        // Reapply tooltip after redraw
-        d3.selectAll("#dumbbell-chart circle, #dumbbell-chart line.connect")
-            .call(attachTooltip);
+
     });
 }
 
 
 
+'use strict';
 
+let currentView = 'drugs';  
+let resizeTimeout = null;
 
+// Simple state container (expected to be filled by load-data.js)
+if (typeof globalData === 'undefined') {
+    window.globalData = {};
+}
 
+// Ensure DATA_PATHS exists (loaded from shared-constants.js)
+if (typeof DATA_PATHS === 'undefined') {
+    window.DATA_PATHS = {
+        drugData: 'data/RQ2.csv',
+        ageData: 'data/RQ3.csv'
+    };
+}
 
-
-
-
-//jody
-// Create a tooltip container
-function createTooltip() {
-    let tooltip = d3.select("body").select(".tooltip");
-    if (tooltip.empty()) {
-        tooltip = d3.select("body")
-            .append("div")
-            .attr("class", "tooltip")
-            .style("position", "absolute")
-            .style("background", tooltipBg)
-            .style("border", `1px solid ${tooltipBorder}`)
-            .style("padding", "6px 8px")
-            .style("border-radius", "4px")
-            .style("font-size", "12px")
-            .style("pointer-events", "none")
-            .style("color", tooltipTextColor)
-            .style("opacity", 0);
+function getMainContent() {
+    const el = document.getElementById('main-content');
+    if (!el) {
+        console.error('Missing required DOM element: #main-content');
     }
-    return tooltip;
+    return el;
 }
 
-// Show tooltip with smooth fade-in
-function showTooltip(tooltip, html, event) {
-    tooltip
-        .html(html)
-        .style("left", `${event.pageX + 12}px`)
-        .style("top", `${event.pageY - 28}px`)
-        .transition()
-        .duration(150)
-        .style("opacity", 1);
+function showLoading(message = 'Loading data...') {
+    const mainContent = getMainContent();
+    if (!mainContent) return;
+    mainContent.innerHTML = `<div class="loading" role="status" aria-live="polite">${escapeHtml(message)}</div>`;
 }
 
-// Hide tooltip smoothly
-function hideTooltip(tooltip) {
-    tooltip
-        .transition()
-        .duration(150)
-        .style("opacity", 0);
+function showError(message) {
+    const mainContent = getMainContent();
+    if (!mainContent) {
+        console.error('showError called but #main-content is missing. Message:', message);
+        return;
+    }
+    mainContent.innerHTML = `<div class="error" role="alert">${escapeHtml(message)}</div>`;
 }
+
+function showMessage(message) {
+    const mainContent = getMainContent();
+    if (!mainContent) return;
+    mainContent.innerHTML = `<div class="message">${escapeHtml(message)}</div>`;
+}
+
+function escapeHtml(text) {
+    if (text == null) return '';
+    return String(text)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
+async function initializeDashboard() {
+    showLoading();
+
+    try {
+        // loadAllData should be defined in load-data.js and fill window.globalData
+        if (typeof loadAllData !== 'function') {
+            const msg = 'Data loader not found. Make sure load-data.js is included and defines loadAllData().';
+            console.error(msg);
+            showError(msg);
+            return;
+        }
+
+        // Attempt to load data
+        try {
+            await loadAllData();
+            console.log('Data loaded:', {
+                drugs: Array.isArray(globalData.drugs) ? globalData.drugs.length : 0,
+                age: Array.isArray(globalData.age) ? globalData.age.length : 0
+            });
+        } catch (loadErr) {
+            // Error while loading data (network, parsing, file missing, etc.)
+            console.error('Error loading CSV data:', loadErr);
+            showError('Failed to load data. Please check that your CSV files exist in the data/ folder and have the correct format. Expected columns:\n' +
+                '- data/RQ2.csv → Drug_Type, Total_Detections\n' +
+                '- data/RQ3.csv  → AGE_GROUP, Positive_Count');
+            return;
+        }
+
+        // Show default view
+        showView(currentView || 'drugs');
+    } catch (err) {
+        console.error('Initialization error:', err);
+        showError('Initialization error. See console for details.');
+    }
+}
+
+/**
+ * showView - update navigation UI and render the selected visualization
+ * @param {string} view - 'drugs' or 'age'
+ */
+function showView(view) {
+    currentView = view;
+    updateNavActiveState(view);
+
+    // Clear prior error/message but don't destroy the DOM elements chart functions may expect.
+    // Many chart functions create/replace their own inner nodes, so we simply ensure main-content exists.
+    const mainContent = getMainContent();
+    if (!mainContent) {
+        showError('Main content container (#main-content) not found in the HTML.');
+        return;
+    }
+    showMessage('Rendering chart...');
+
+    try {
+        switch (view) {
+            case 'drugs':
+            // Check main drug data
+            if (!Array.isArray(globalData.drugs) || globalData.drugs.length === 0) {
+                showError('Drug data not available. Please ensure data/positive_by_drugs.csv exists and contains columns: Drug_Type, Total_Detections');
+                return;
+            }
+            if (typeof createDrugChart !== 'function') {
+                showError('Chart renderer for drugs not found. Ensure createDrugChart() is defined and included.');
+                console.error('Missing createDrugChart function.');
+                return;
+            }
+            // Render main drug chart
+            try {
+                createDrugChart(globalData.drugs);
+            } catch (renderErr) {
+                console.error('Error while rendering drug chart:', renderErr);
+                showError('An error occurred while rendering the drug chart. See console for details.');
+            }
+
+            // Render stacked bar chart (location by drug type)
+            if (!Array.isArray(globalData.drugsByLocation) || globalData.drugsByLocation.length === 0) {
+                console.warn('Drug location data not available. Skipping stacked bar chart.');
+                break;
+            }
+            if (typeof drawStackedBarChart !== 'function') {
+                console.warn('Stacked bar chart function not found. Skipping stacked bar chart.');
+                break;
+            }
+
+            try {
+                // Create container div inside #main-content
+                const stackedContainer = document.createElement('div');
+                stackedContainer.id = 'stackedbarchart';
+                stackedContainer.classList.add('responsive-svg-container');
+                getMainContent().appendChild(stackedContainer);
+
+                drawStackedBarChart(globalData.drugsByLocation);
+            } catch (err) {
+                console.error('Error rendering stacked bar chart:', err);
+            }
+
+            break;
+
+
+            case 'age':
+                if (!Array.isArray(globalData.age) || globalData.age.length === 0) {
+                    showError('Age data not available. Please ensure data/positive_by_age.csv exists and contains columns: AGE_GROUP, Positive_Count');
+                    return;
+                }
+                if (typeof createAgeChart !== 'function') {
+                    showError('Chart renderer for age groups not found. Ensure createAgeChart() is defined and included.');
+                    console.error('Missing createAgeChart function.');
+                    return;
+                }
+                try {
+                    createAgeChart(globalData.age);
+                } catch (renderErr) {
+                    console.error('Error while rendering age chart:', renderErr);
+                    showError('An error occurred while rendering the age chart. See console for details.');
+                }
+                break;
+
+            default:
+                showError('Unknown view requested: ' + escapeHtml(view));
+                console.warn('Unknown view in showView:', view);
+        }
+    } catch (err) {
+        console.error('Unexpected error in showView:', err);
+        showError('Unexpected error when switching views. See console for details.');
+    }
+}
+
+/**
+ * Update nav buttons' active state
+ */
+function updateNavActiveState(view) {
+    const buttons = document.querySelectorAll('.nav-btn');
+    if (!buttons || buttons.length === 0) {
+        // No nav buttons present — not fatal, but log it
+        console.warn('No navigation buttons (.nav-btn) found in the page. Navigation will not be interactive.');
+        return;
+    }
+    buttons.forEach(btn => {
+        try {
+            btn.classList.toggle('active', btn.dataset.view === view);
+        } catch (e) {
+            // ignore individual button errors
+        }
+    });
+}
+
+/**
+ * Hook up listeners and start initialization on DOM ready
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    // Hook nav buttons if present
+    const buttons = document.querySelectorAll('.nav-btn');
+    if (buttons && buttons.length > 0) {
+        buttons.forEach(btn => {
+            btn.addEventListener('click', (ev) => {
+                const view = btn.dataset.view;
+                if (!view) {
+                    console.warn('nav-btn has no data-view attribute', btn);
+                    return;
+                }
+                if (view === currentView) return; // already active
+                showView(view);
+            });
+        });
+    } else {
+        console.warn('No .nav-btn elements found on DOMContentLoaded.');
+    }
+
+    // Start the dashboard
+    initializeDashboard();
+});
+
+/**
+ * Handle window resize — debounce and attempt to re-render current view.
+ * Many chart functions have their own responsive behavior; the fallback here is to call showView again.
+ */
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        if (!currentView) return;
+        // If create*Chart functions support a 'resize' argument or redrawing, they'd handle it internally.
+        // This will attempt to re-render the current view which is safe because showView guards data & renderer presence.
+        showView(currentView);
+    }, 250);
+});
+
+
+
+
+
+
+

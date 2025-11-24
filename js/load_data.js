@@ -1,6 +1,4 @@
-// ---------------------------
-// Load RQ1 — Chart 1 (Bar + Line)
-// ---------------------------
+// Chart 1 (Bar + Line)
 d3.csv("data/RQ1.csv", d => ({
     year: +d.YEAR,
     count_conducted: +d.COUNT_CONDUCTED,
@@ -10,22 +8,16 @@ d3.csv("data/RQ1.csv", d => ({
 .then(data => {
     console.log("RQ1 data loaded:", data);
 
-    // Chart 1 (Bar + Line)
     createChart(data);
-
-    // Update overview statistics (your Page 1 small stats)
     updateStats(data);
-
 })
 .catch(error => {
     console.error("Error loading RQ1 CSV:", error);
 });
 
 
-// ---------------------------
-// Load RQ2 — Chart 2 (Dumbbell)
-// ---------------------------
-d3.csv("data/RQ2.csv", d => ({
+// Chart 1+ (Dumbbell)
+d3.csv("data/RQ1+.csv", d => ({
     JURISDICTION: d.JURISDICTION,
     2008: +d["2008"],
     2009: +d["2009"],
@@ -48,10 +40,7 @@ d3.csv("data/RQ2.csv", d => ({
 .then(data => {
     console.log("RQ2 data loaded:", data);
 
-    // Chart 2 (Dumbbell)
     createDumbbellChart(data);
-
-    // Initialize filter + tooltip interactivity for Chart 2
     initChart2Interaction(data);
 })
 .catch(error => {
@@ -59,30 +48,8 @@ d3.csv("data/RQ2.csv", d => ({
 });
 
 
-
-
-
-
-
-d3.csv("data/police_enforcement_2024_location.csv", d => ({
-    LOCATION: d.LOCATION,
-    AMPHETAMINE: +d.AMPHETAMINE,
-    CANNABIS: +d.CANNABIS,
-    COCAINE: +d.COCAINE,
-    ECSTASY: +d.ECSTASY,
-    METHYLAMPHETAMINE: +d.METHYLAMPHETAMINE,
-    OTHER: +d.OTHER,
-    UNKNOWN: +d.UNKNOWN
-})).then(data => {
-    console.log(data);
-
-    drawStackedBarChart(data);
-
-}).catch(error => {
-    console.error("Error loading the CSV file:", error);
-});
-
-d3.csv("data/police_enforcement_2024_positive_drug_test_per_10000.csv", d => ({
+// Choropleth Map
+d3.csv("data/RQ5.csv", d => ({
     YEAR: +d.YEAR,
     JURISDICTION: d.JURISDICTION,
     POSITIVE_DRUG_TESTS_PER_10000: +d.POSITIVE_DRUG_TESTS_PER_10000,
@@ -92,7 +59,77 @@ d3.csv("data/police_enforcement_2024_positive_drug_test_per_10000.csv", d => ({
     console.log(data);
 
     drawChoroplethMap(data);
-
 }).catch(error => {
     console.error("Error loading the CSV file:", error);
 });
+
+
+
+
+// Load data functions for other charts
+async function loadDrugData() {
+    try {
+        const data = await d3.csv(DATA_PATHS.drugData);
+
+        globalData.drugs = data.map(d => ({
+            drug: d.Drug_Type?.trim(),
+            detections: +d.Total_Detections
+        }));
+
+        return globalData.drugs;
+    } catch (error) {
+        console.error('Error loading drug data:', error);
+        throw error;
+    }
+}
+
+async function loadAgeData() {
+    try {
+        const data = await d3.csv(DATA_PATHS.ageData);
+
+        globalData.age = data.map(d => ({
+            ageGroup: d.AGE_GROUP?.trim(),
+            count: +d.Positive_Count
+        }));
+
+        return globalData.age;
+    } catch (error) {
+        console.error('Error loading age data:', error);
+        throw error;
+    }
+}
+
+async function loadDrugLocationData() {
+    try {
+        globalData.drugsByLocation = await d3.csv("data/RQ4.csv", d => ({
+            LOCATION: d.LOCATION,
+            AMPHETAMINE: +d.AMPHETAMINE,
+            CANNABIS: +d.CANNABIS,
+            COCAINE: +d.COCAINE,
+            ECSTASY: +d.ECSTASY,
+            METHYLAMPHETAMINE: +d.METHYLAMPHETAMINE,
+            OTHER: +d.OTHER,
+            UNKNOWN: +d.UNKNOWN
+        }));
+        console.log('Drug location data loaded:', globalData.drugsByLocation.length, 'rows');
+    } catch (err) {
+        console.error('Error loading drug location CSV:', err);
+        throw err;
+    }
+}
+
+
+async function loadAllData() {
+    try {
+        await Promise.all([
+            loadDrugData(),        // existing drug detection counts
+            loadAgeData(),         // existing age demographics
+            loadDrugLocationData() // new function for stacked bar chart
+        ]);
+        console.log('All data loaded successfully');
+    } catch (error) {
+        console.error('Error loading data:', error);
+        throw error;
+    }
+}
+
