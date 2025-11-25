@@ -45,7 +45,7 @@ Which states/territories conduct more tests per 10,000 licences?
 ---
 
 
-## 📚 Pages Summary
+## Pages Summary
 
 ### **Home (Page 1)**
 
@@ -71,7 +71,7 @@ Which states/territories conduct more tests per 10,000 licences?
 
 ---
 
-## ⚖️ Ethical Considerations
+## Ethical Considerations
 
 * No confidential or personal data used
 * All datasets are aggregated and publicly available
@@ -79,9 +79,11 @@ Which states/territories conduct more tests per 10,000 licences?
 
 ---
 
-## 👥 Contributors
+## Contributors
 
 * **Name:** (Add your name/team members)
 * **Role:** Data sourcing, cleaning, visualisation, design
 
 ---
+## AI Declaration
+* Some components of this project were developed with assistance from AI tools (ChatGPT), including help with debugging, explaining coding concepts, generating boilerplate code structures, and improving written clarity. All data analysis, visualisation design decisions, and final implementation were completed by the project authors.
