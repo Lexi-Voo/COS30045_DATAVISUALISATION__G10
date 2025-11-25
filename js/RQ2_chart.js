@@ -54,7 +54,7 @@ function createDrugChart(data) {
         .attr('transform', `translate(0,${innerHeight})`)
         .call(d3.axisBottom(x))
         .selectAll('text')
-        .style('font-size', '16px')
+        .style('font-size', '12px')
         .style('font-weight', 'bold')
         .style('fill', '#2c3e50')
         .style('text-anchor', 'middle');
