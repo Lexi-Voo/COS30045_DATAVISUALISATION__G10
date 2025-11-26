@@ -118,6 +118,22 @@ function createAgeChart(data) {
         .attr('y', d => y(d.count))
         .attr('height', d => innerHeight - y(d.count));
 
+        // Annotation indicating unknown category
+        const hasUnknown = data.some(d => d.ageGroup.toLowerCase() === 'unknown');
+
+        if (hasUnknown) {
+            svg.append('text')
+                .attr('class', 'annotation')
+                .attr('x', innerWidth - 10)
+                .attr('y', -20)
+                .attr('text-anchor', 'end')
+                .style('font-size', '14px')
+                .style('font-weight', 'bold')
+                .style('fill', '#e53e3e')
+                .text('Note: Unknown age category indicate driver’s age was missing in the dataset.');
+        }
+
+
     // Value labels
     svg.selectAll('.label')
         .data(data)
@@ -152,6 +168,7 @@ function createAgeChart(data) {
         { label: 'Young Drivers (0-25)', value: `${youngPercentage}%` },
         { label: 'Average per Group', value: avgCount }
     ];
+    
 
     d3.select('#stats')
         .selectAll('.stat-card')
