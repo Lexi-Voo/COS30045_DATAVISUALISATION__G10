@@ -1,3 +1,4 @@
+//loading navigation bar and footer 
 function loadHTML(id, file) {
   fetch(file)
     .then(res => res.text())

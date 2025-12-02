@@ -1,4 +1,4 @@
-// Chart 1 (Bar + Line)
+// Bar + line chart
 d3.csv("data/RQ1.csv", d => ({
     year: +d.YEAR,
     count_conducted: +d.COUNT_CONDUCTED,
@@ -16,7 +16,7 @@ d3.csv("data/RQ1.csv", d => ({
 });
 
 
-// Chart 1+ (Dumbbell)
+// Dumbbell
 d3.csv("data/RQ1+.csv", d => ({
     JURISDICTION: d.JURISDICTION,
     2008: +d["2008"],
