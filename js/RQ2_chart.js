@@ -13,6 +13,7 @@ function createDrugChart(data) {
         .style("font-weight", "bold")
         .style('margin', '20px 0')
         .text('Drug Types Distribution in Positive Tests');
+        
 
     const statsDiv = container.append('div')
         .attr('class', 'stats-grid')
@@ -35,6 +36,15 @@ function createDrugChart(data) {
 
     const innerWidth = 1100 - margin.left - margin.right;
     const innerHeight = 700 - margin.top - margin.bottom;
+
+    svg.append("text")
+        .attr("x", innerWidth)          // right-aligned
+        .attr("y", -20)                 // above the chart area
+        .attr("text-anchor", "end")
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
+        .style("fill", "#e53e3e")
+        .text('Note: Other category was not specifically recorded or indicated in the dataset');
 
     const x = d3.scaleBand()
         .domain(data.map(d => d.drug))

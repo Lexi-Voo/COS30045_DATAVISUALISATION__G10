@@ -36,24 +36,17 @@ function hideTooltip(tooltip) {
         .style("opacity", 0);
 }
 
-// Attach tooltip to any selection
+// Attach tooltip to bar and line chart 
 function attachTooltip(selection) {
     const tooltip = createTooltip();
     selection.on("mouseenter", (event, d) => {
         let el = d3.select(event.currentTarget);
         let htmlContent = "";
 
-        // Chart1: bar or dot
         if (el.classed("bar") || el.classed("dot")) {
             const count = el.attr("data-count") || d.count_conducted;
             const rate = el.attr("data-rate") || d.percent_positive;
             htmlContent = `Count: ${count}<br>Rate: ${rate}%`;
-        }
-        // Chart2: start, end, or line connect
-        else if (el.classed("start") || el.classed("end") || el.classed("connect")) {
-            const startVal = el.attr("data-start") || el.attr("data-value")?.split(" → ")[0];
-            const endVal = el.attr("data-end") || el.attr("data-value")?.split(" → ")[1];
-            htmlContent = `Start: ${startVal}<br>End: ${endVal}`;
         }
 
         showTooltip(tooltip, htmlContent, event);
@@ -84,11 +77,8 @@ function initChart2Interaction(data) {
         const end = yearEndSelect.property("value");
 
         createDumbbellChart(data, start, end);
-
-
     });
 }
-
 
 
 'use strict';

@@ -20,7 +20,7 @@ const drawStackedBarChart = (data) => {
         .style("fill", "#2c3e50")
         .text("Drug Type Composition by Location Type");
 
-        // Annotation explaining the "Unknown" category
+    // Annotation explaining the "Unknown" category
     svg.append("text")
         .attr("x", width - 20)
         .attr("y", margin.top / 2 + 10)
@@ -28,7 +28,7 @@ const drawStackedBarChart = (data) => {
         .style("font-size", "14px")
         .style("font-weight", "bold")
         .style("fill", "#e53e3e")
-        .text('Note: Unknown location indicate location was missing in the dataset.');
+        .text('Note: Unknown location indicate was missing in the dataset');
 
 
     const keys = ["AMPHETAMINE", "CANNABIS", "COCAINE", "ECSTASY", "METHYLAMPHETAMINE", "OTHER", "UNKNOWN"];

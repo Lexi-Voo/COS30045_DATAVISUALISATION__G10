@@ -130,7 +130,7 @@ function createAgeChart(data) {
                 .style('font-size', '14px')
                 .style('font-weight', 'bold')
                 .style('fill', '#e53e3e')
-                .text('Note: Unknown age category indicate driver’s age was missing in the dataset.');
+                .text('Note: Unknown age category indicate driver’s age was missing in the dataset');
         }
 
 
