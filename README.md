@@ -75,14 +75,12 @@ Which states/territories conduct more tests per 10,000 licences?
 
 * No confidential or personal data used
 * All datasets are aggregated and publicly available
-* Visualisations avoid stigmatisation and bias
-
 ---
 
 ## Contributors
 
-* **Name:** (Add your name/team members)
-* **Role:** Data sourcing, cleaning, visualisation, design
+* **Group No.:** COS30045 G10 
+* **Name:** Jody LAW, Claudia Ying Xin CHAU, Lexi Yung Jun VOO
 
 ---
 ## AI Declaration
